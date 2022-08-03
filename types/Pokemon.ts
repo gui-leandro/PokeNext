@@ -1,5 +1,7 @@
 export type PokemonList = {
   count: number
+  next: string | null
+  previous: string | null
   results: Pokemon[]
 }
 
@@ -13,21 +15,13 @@ export type PokemonDetail = {
   forms: {
     name: string
   }[]
-  sprites: {
-    abilities: {
-      ability: {
-        name: string
-      }
-    }[]
-  }
-  versions: {
-    generationV: {
-      blackWhite: {
-        animated: {
-          frontDefault: string
-          frontShiny: string
-        }
-      }
+  abilities: {
+    ability: {
+      name: string
     }
+  }[]
+  sprites: {
+    front_default: string
+    front_shiny: string
   }
 }

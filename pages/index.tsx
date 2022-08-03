@@ -1,63 +1,65 @@
-import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
+import type { NextPage } from 'next'
 import Head from 'next/head'
-import { ChangeEvent, useState } from 'react'
-import { Pokemon, PokemonList } from '../types/Pokemon'
+import Image from 'next/image'
+import { ChangeEvent, useEffect, useState } from 'react'
+import { Pokemon, PokemonList, PokemonDetail } from '../types/Pokemon'
 import { pokeAPI, pokemonData } from './api/api'
 
-export const getStaticProps: GetStaticProps = async () => {
-  const res = await pokeAPI.get('pokemon?limit=100000&offset=0')
-  const pokemonList: PokemonList = res.data
-
-  const getPokemonDetails = pokemonList.results.map(
-    async (pokemon: Pokemon) => {
-      const p = await pokemonData(pokemon.url)
-
-      if (p) {
-        return p
-      }
-
-      return null
-    }
-  )
-
-  const pokemonDetails = await Promise.all(getPokemonDetails)
-
-  return {
-    props: {
-      pokemonList,
-      pokemonListDetailed: JSON.stringify(pokemonDetails),
-    },
-  }
-}
-
-const Home: NextPage = ({
-  pokemonList,
-  pokemonListDetailed,
-}:
-InferGetStaticPropsType<typeof getStaticProps>) => {
+const Home: NextPage = () => {
   // States
+  const [loading, setLoading] = useState(true)
+  const [nextPage, setNextPage] = useState('')
+  const [previousPage, setPreviousPage] = useState('')
   const [search, setSearch] = useState('')
-  const [listSize, setListSize] = useState(20)
+  const [totalPokemons, setTotalPokemons] = useState(0)
+  const [pokemons, setPokemons] = useState<PokemonDetail[]>([])
 
-  console.log(JSON.parse(pokemonListDetailed))
+  const getPokemons = async (params = 'offset=0&limit=20') => {
+    const res = await pokeAPI.get(`pokemon?${params}`)
+    const pokemonList: PokemonList = res.data
 
-  const pokemonFilteredList: Pokemon[] = pokemonList.results.filter(
-    (pokemon: Pokemon) => pokemon.name.includes(search)
-  )
+    setNextPage(pokemonList.next ? pokemonList.next.split('?')[1] : '')
+    setPreviousPage(
+      pokemonList.previous ? pokemonList.previous.split('?')[1] : ''
+    )
 
-  const showMorePokemons = (sum: number) => {
-    if (sum === pokemonList.count) return
+    const getPokemonDetails = pokemonList.results.map(
+      async (pokemon: Pokemon) => {
+        const pokemonDetail: PokemonDetail = await pokemonData(pokemon.url)
 
-    if (sum > pokemonList.count) {
-      setListSize(pokemonList.count)
-      return
+        if (pokemonDetail) {
+          return {
+            id: pokemonDetail.id,
+            forms: pokemonDetail.forms,
+            abilities: pokemonDetail.abilities,
+            sprites: pokemonDetail.sprites,
+          }
+        }
+
+        return null
+      }
+    )
+
+    const pokemonDetails = (await Promise.all(
+      getPokemonDetails
+    )) as PokemonDetail[]
+
+    if (pokemonDetails.length) {
+      setPokemons(pokemonDetails)
+      setTotalPokemons(pokemonList.count)
+      setLoading(false)
+      return true
     }
 
-    setListSize(sum)
+    return false
   }
 
-  if (!pokemonList) {
-    return <p>An error has occurred to load the pokemon list...</p>
+  useEffect(() => {
+    getPokemons()
+  }, [])
+
+  if (loading) {
+    return <p>Loading...</p>
   }
 
   return (
@@ -76,18 +78,48 @@ InferGetStaticPropsType<typeof getStaticProps>) => {
             setSearch(e.target.value)
           }
         />
-        <p>Total: {pokemonList.count}</p>
+        <p>Total: {totalPokemons}</p>
       </article>
       <section>
-        {pokemonFilteredList
-          .slice(0, listSize)
-          .map((pokemon: Pokemon, index: number) => (
-            <pre key={index} className='mb-2 bg-gray-100'>
-              {pokemon.name}
-            </pre>
+        <article className='grid grid-cols-3 gap-3 items-center border max-w-xl'>
+          {pokemons.map((pokemon: PokemonDetail, index: number) => (
+            <article
+              key={index}
+              className='
+                flex flex-col items-center justify-center
+                bg-gray-100 rounded-md p-6 w-40'
+            >
+              <Image
+                src={pokemon.sprites.front_default}
+                width={120}
+                height={120}
+                quality={75}
+                alt={pokemon.forms[0].name}
+                className='absolute'
+              />
+              <pre className='my-2 text-center uppercase'>
+                {pokemon.forms[0].name}
+              </pre>
+            </article>
           ))}
-        <button onClick={() => showMorePokemons(listSize + 20)}>
-          Show More
+        </article>
+        <button
+          onClick={() => getPokemons(previousPage)}
+          disabled={previousPage === ''}
+          className='
+            p-4 bg-gray-400
+          '
+        >
+          previous
+        </button>
+        <button
+          onClick={() => getPokemons(nextPage)}
+          disabled={nextPage === ''}
+          className='
+            p-4 bg-blue-400
+          '
+        >
+          next
         </button>
       </section>
     </>
