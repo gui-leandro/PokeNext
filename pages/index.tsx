@@ -10,7 +10,13 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const getPokemonDetails = pokemonList.results.map(
     async (pokemon: Pokemon) => {
-      return await pokemonData(pokemon.url)
+      const p = await pokemonData(pokemon.url)
+
+      if (p) {
+        return p
+      }
+
+      return null
     }
   )
 
@@ -19,21 +25,21 @@ export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       pokemonList,
-      pokemonDetails,
+      pokemonListDetailed: JSON.stringify(pokemonDetails),
     },
-    revalidate: 60,
   }
 }
 
 const Home: NextPage = ({
   pokemonList,
-  pokemonDetails,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  pokemonListDetailed,
+}:
+InferGetStaticPropsType<typeof getStaticProps>) => {
   // States
   const [search, setSearch] = useState('')
   const [listSize, setListSize] = useState(20)
 
-  console.log(pokemonDetails)
+  console.log(JSON.parse(pokemonListDetailed))
 
   const pokemonFilteredList: Pokemon[] = pokemonList.results.filter(
     (pokemon: Pokemon) => pokemon.name.includes(search)
