@@ -2,21 +2,38 @@ import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import Head from 'next/head'
 import { ChangeEvent, useState } from 'react'
 import { Pokemon, PokemonList } from '../types/Pokemon'
-import { pokeAPI } from './api/api'
+import { pokeAPI, pokemonData } from './api/api'
 
 export const getStaticProps: GetStaticProps = async () => {
   const res = await pokeAPI.get('pokemon?limit=100000&offset=0')
   const pokemonList: PokemonList = res.data
 
-  return { props: { pokemonList }, revalidate: 60 }
+  const getPokemonDetails = pokemonList.results.map(
+    async (pokemon: Pokemon) => {
+      return await pokemonData(pokemon.url)
+    }
+  )
+
+  const pokemonDetails = await Promise.all(getPokemonDetails)
+
+  return {
+    props: {
+      pokemonList,
+      pokemonDetails,
+    },
+    revalidate: 60,
+  }
 }
 
 const Home: NextPage = ({
   pokemonList,
+  pokemonDetails,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // States
   const [search, setSearch] = useState('')
   const [listSize, setListSize] = useState(20)
+
+  console.log(pokemonDetails)
 
   const pokemonFilteredList: Pokemon[] = pokemonList.results.filter(
     (pokemon: Pokemon) => pokemon.name.includes(search)
@@ -59,7 +76,9 @@ const Home: NextPage = ({
         {pokemonFilteredList
           .slice(0, listSize)
           .map((pokemon: Pokemon, index: number) => (
-            <pre className='mb-2 bg-gray-100'>{pokemon.name}</pre>
+            <pre key={index} className='mb-2 bg-gray-100'>
+              {pokemon.name}
+            </pre>
           ))}
         <button onClick={() => showMorePokemons(listSize + 20)}>
           Show More
