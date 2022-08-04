@@ -1,9 +1,14 @@
+import classNames from 'classnames'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { Pokemon, PokemonList, PokemonDetail } from '../types/Pokemon'
 import { pokeAPI, pokemonData } from './api/api'
+
+// Icons
+import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md'
+import { AiOutlineSearch } from 'react-icons/ai'
 
 const Home: NextPage = () => {
   // States
@@ -40,9 +45,9 @@ const Home: NextPage = () => {
       }
     )
 
-    const pokemonDetails = (await Promise.all(
-      getPokemonDetails
-    )) as PokemonDetail[]
+    const pokemonDetails = (await Promise.all(getPokemonDetails)).filter(
+      (result) => result !== null
+    ) as PokemonDetail[]
 
     if (pokemonDetails.length) {
       setPokemons(pokemonDetails)
@@ -68,60 +73,99 @@ const Home: NextPage = () => {
         <title>PokeNext</title>
       </Head>
 
-      <article>
-        <input
-          type='text'
-          name='pokemonSearch'
-          id='pokemonSearch'
-          placeholder='Busque pelo nome'
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setSearch(e.target.value)
-          }
-        />
-        <p>Total: {totalPokemons}</p>
-      </article>
-      <section>
-        <article className='grid grid-cols-3 gap-3 items-center border max-w-xl'>
-          {pokemons.map((pokemon: PokemonDetail, index: number) => (
-            <article
-              key={index}
+      <main className='mx-auto'>
+        <header className='flex flex-col items-center mb-6 p-6 bg-red-500'>
+          <form
+            onSubmit={(e: FormEvent<HTMLFormElement>) => {
+              e.preventDefault()
+              console.log(search)
+            }}
+            className='flex gap-2'
+          >
+            <input
+              type='text'
+              name='pokemonSearch'
+              id='pokemonSearch'
+              placeholder='Search by name'
+              className='border border-gray-300 p-1 rounded-lg'
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setSearch(e.target.value)
+              }
+            />
+            <button
+              type='submit'
               className='
-                flex flex-col items-center justify-center
-                bg-gray-100 rounded-md p-6 w-40'
+                text-white 
+                bg-yellow-500 hover:bg-yellow-600 
+                rounded-lg p-2 transition-all'
             >
-              <Image
-                src={pokemon.sprites.front_default}
-                width={120}
-                height={120}
-                quality={75}
-                alt={pokemon.forms[0].name}
-                className='absolute'
-              />
-              <pre className='my-2 text-center uppercase'>
-                {pokemon.forms[0].name}
-              </pre>
-            </article>
-          ))}
-        </article>
-        <button
-          onClick={() => getPokemons(previousPage)}
-          disabled={previousPage === ''}
-          className='
-            p-4 bg-gray-400
-          '
-        >
-          previous
-        </button>
-        <button
-          onClick={() => getPokemons(nextPage)}
-          disabled={nextPage === ''}
-          className='
-            p-4 bg-blue-400
-          '
-        >
-          next
-        </button>
-      </section>
+              <AiOutlineSearch className='rotate-90' />
+            </button>
+          </form>
+        </header>
+        <section className='mx-auto max-w-xl'>
+          {/* Pokemon cards */}
+          <p className='text-lg text-center mb-6 text-gray-700 font-bold'>
+            Total: {totalPokemons}
+          </p>
+          <article
+            className='
+              grid sm:grid-cols-3 grid-cols-2 gap-3 px-2 items-center'
+          >
+            {pokemons.map((pokemon: PokemonDetail, index: number) => (
+              <article
+                key={index}
+                className={classNames(
+                  'flex flex-col items-center justify-center',
+                  'bg-gray-100 rounded-md p-6 mx-auto w-40',
+                  'border-2 hover:border-4 transition-all cursor-pointer',
+                  index % 2 === 0 ? 'border-yellow-500' : 'border-red-500'
+                )}
+              >
+                <h5 className='text-gray-500 text-xl mb-2'>{pokemon.id}</h5>
+                <Image
+                  src={pokemon.sprites.front_default ?? '/no-image.png'}
+                  width={120}
+                  height={120}
+                  quality={75}
+                  alt={pokemon.forms[0]?.name}
+                  className='absolute'
+                />
+                <small className='my-2 text-center text-gray-700 uppercase'>
+                  {pokemon.forms[0]?.name}
+                </small>
+              </article>
+            ))}
+          </article>
+          {/* Pagination buttons */}
+          <article className='flex items-center justify-center p-3'>
+            <button
+              onClick={() => getPokemons(previousPage)}
+              disabled={previousPage === ''}
+              className={classNames(
+                'w-20 p-4 font-bold text-3xl text-white rounded-l-lg',
+                previousPage === ''
+                  ? 'bg-gray-400'
+                  : 'bg-yellow-500 hover:bg-yellow-600 transition-all'
+              )}
+            >
+              <MdNavigateBefore className='mx-auto' />
+            </button>
+            <button
+              onClick={() => getPokemons(nextPage)}
+              disabled={nextPage === ''}
+              className={classNames(
+                'w-20 p-4 font-bold text-white text-3xl rounded-r-lg',
+                nextPage === ''
+                  ? 'bg-gray-400'
+                  : 'bg-red-500 hover:bg-red-600 transition-all'
+              )}
+            >
+              <MdNavigateNext className='mx-auto' />
+            </button>
+          </article>
+        </section>
+      </main>
     </>
   )
 }
