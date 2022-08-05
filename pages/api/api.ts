@@ -15,3 +15,15 @@ export const pokemonData = async (url: string) => {
     console.log('error: ', error)
   }
 }
+
+export const searchPokemon = async (name: string) => {
+  try {
+    const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+
+    if (res.data) return res.data
+
+    return null
+  } catch (error) {
+    console.log('error: ', error)
+  }
+}
