@@ -33,7 +33,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps = async ({ params }: Params) => {
   const pokeName = String(params.name).toLowerCase()
 
-  const res = await searchPokemon(pokeName)
+  const res =
+    pokeName === 'basculegion-female' || pokeName === 'enamorus-therian'
+      ? await searchPokemon('pikachu')
+      : await searchPokemon(pokeName)
 
   const pokeFormat = {
     id: res?.id,
