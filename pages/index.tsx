@@ -106,6 +106,10 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>PokeNext</title>
+        <meta
+          name='description'
+          content='Pokemon list, look for a pokemon and see its attributes'
+        />
       </Head>
 
       <main className='mx-auto relative bg-gray-100'>
@@ -189,6 +193,7 @@ const Home: NextPage = () => {
           {/* Pagination buttons */}
           <article className='flex items-center justify-center p-3'>
             <button
+              name='Previous pokemons page'
               onClick={() => getPokemons(previousPage)}
               disabled={previousPage === ''}
               className={classNames(
@@ -201,6 +206,7 @@ const Home: NextPage = () => {
               <MdNavigateBefore className='mx-auto' />
             </button>
             <button
+              name='Next pokemons page'
               onClick={() => getPokemons(nextPage)}
               disabled={nextPage === ''}
               className={classNames(

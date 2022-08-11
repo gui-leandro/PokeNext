@@ -64,6 +64,7 @@ const PokemonPage = (props: any) => {
     <>
       <Head>
         <title>PokeNext - {String(capitalizedName)}</title>
+        <meta name="description" content="The pokemon details" />
       </Head>
 
       <main

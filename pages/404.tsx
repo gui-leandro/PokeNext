@@ -9,6 +9,7 @@ const ErrorPage: NextPage = () => {
     <>
     <Head>
       <title>404 - Page Not Found</title>
+      <meta name="description" content="Pokemon not found" />
     </Head>
       <main
         className='p-6 h-screen'
