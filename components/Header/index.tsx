@@ -6,7 +6,7 @@ type HeaderProps = {
 
 export const Header = ({ children }: HeaderProps) => {
   return (
-    <header className='flex flex-col items-center mt-8 mb-6 p-6 bg-red-500'>
+    <header className='flex flex-col items-center mb-6 p-6 bg-red-500'>
       {children}
     </header>
   )

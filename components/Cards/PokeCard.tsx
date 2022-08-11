@@ -1,12 +1,14 @@
 import classNames from 'classnames'
-import { ReactNode } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { PokemonDetail } from '../../types/Pokemon'
 
 type PokeCardProps = {
-  children: ReactNode
+  pokemon: PokemonDetail
   className?: string
 }
 
-export const PokeCard = ({ children, className }: PokeCardProps) => {
+export const PokeCard = ({ pokemon, className }: PokeCardProps) => {
   return (
     <article
       className={classNames(
@@ -16,7 +18,29 @@ export const PokeCard = ({ children, className }: PokeCardProps) => {
         className ?? 'border-black'
       )}
     >
-      {children}
+      <h5 className='text-gray-500 text-xl mb-2'>{pokemon.id}</h5>
+      <Image
+        src={pokemon.sprites.front_default ?? '/no-image.png'}
+        width={120}
+        height={120}
+        quality={75}
+        alt={pokemon.forms[0]?.name}
+        className='absolute'
+      />
+      <small className='my-2 text-center text-gray-700 uppercase'>
+        {pokemon.forms[0]?.name}
+      </small>
+      <Link href={`pokemon/${pokemon.forms[0]?.name}`} passHref>
+        <a
+          className='
+            w-full text-sm text-center
+            text-white bg-red-500
+            rounded-lg p-1 hover:opacity-90 transition-all
+          '
+        >
+          Details
+        </a>
+      </Link>
     </article>
   )
 }
