@@ -15,8 +15,8 @@ export const GreatPokeCard = ({ pokemon }: GreatPokeCardProps) => {
         bg-yellow-300 rounded-md p-6 mx-auto w-full max-w-xl h-full
         border-8 border-blue-500 transition-all'
     >
-      <h1 className='font-semibold text-white text-3xl mb-3'>{pokemon.id}</h1>
-      <h2 className='uppercase text-white font-bold text-3xl mb-6'>{pokemon.forms[0].name}</h2>
+      <h1 className='font-semibold text-yellow-900 text-3xl mb-3'>{pokemon.id}</h1>
+      <h2 className='uppercase text-yellow-900 font-bold text-3xl mb-6'>{pokemon.forms[0].name}</h2>
       <article className='sm:flex gap-2'>
         <article
           className='rounded-lg h-full mb-6 sm:mb-0'

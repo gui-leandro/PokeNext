@@ -13,7 +13,7 @@ export const PokeCard = ({ pokemon, className }: PokeCardProps) => {
     <article
       className={classNames(
         'flex flex-col items-center justify-center',
-        'bg-gray-100 rounded-md p-6 mx-auto w-40',
+        'bg-white rounded-md p-6 mx-auto w-40',
         'border-2 hover:border-4 transition-all',
         className ?? 'border-black'
       )}

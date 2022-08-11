@@ -4,6 +4,7 @@ import { GetStaticPaths } from 'next'
 import { GreatPokeCard } from '../../components/Cards/GreatPokeCard'
 import Head from 'next/head'
 import { GoBackHome } from '../../components/Links/BackHome'
+import { Footer } from '../../components/Footer'
 
 type Params = {
   params: {
@@ -64,7 +65,7 @@ const PokemonPage = (props: any) => {
 
       <main
         className='
-          flex flex-col items-center justify-center p-6 min-h-screen'
+          flex flex-col items-center justify-center px-6 pt-6 pb-14 min-h-screen'
         style={{
           background: 'url(/bg-poke-page.jpg) no-repeat',
           backgroundSize: 'cover',
@@ -81,6 +82,7 @@ const PokemonPage = (props: any) => {
         </article>
         <GreatPokeCard pokemon={pokemon} />
       </main>
+      <Footer />
     </>
   )
 }

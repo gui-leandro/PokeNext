@@ -12,6 +12,8 @@ import { PokeCard } from '../components/Cards/PokeCard'
 // Icons
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md'
 import { Spin } from '../components/Loading/Spin'
+import { Footer } from '../components/Footer'
+import Link from 'next/link'
 
 const Home: NextPage = () => {
   // States
@@ -94,7 +96,7 @@ const Home: NextPage = () => {
 
   if (loading) {
     return (
-      <main className="flex h-screen items-center justify-center">
+      <main className='flex h-screen items-center justify-center'>
         <Spin />
       </main>
     )
@@ -106,16 +108,20 @@ const Home: NextPage = () => {
         <title>PokeNext</title>
       </Head>
 
-      <main className='mx-auto relative'>
+      <main className='mx-auto relative bg-gray-100'>
         <Header>
-          <Image
-            src={'/pokenext-logo.png'}
-            width={208}
-            height={72}
-            alt='PokeNext Logo'
-          />
+          <Link href={'/'} passHref>
+            <a className='cursor-pointer'>
+              <Image
+                src={'/pokenext-logo.png'}
+                width={208}
+                height={72}
+                alt='PokeNext Logo'
+              />
+            </a>
+          </Link>
           <form
-            className='flex mt-2'
+            className='flex mt-1'
             onSubmit={async (e: FormEvent<HTMLFormElement>) => {
               e.preventDefault()
               const submitted = await getSearchPokemon(search)
@@ -209,6 +215,7 @@ const Home: NextPage = () => {
           </article>
         </section>
       </main>
+      <Footer />
     </>
   )
 }
