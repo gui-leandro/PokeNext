@@ -11,6 +11,7 @@ import { PokeCard } from '../components/Cards/PokeCard'
 
 // Icons
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md'
+import { Spin } from '../components/Loading/Spin'
 
 const Home: NextPage = () => {
   // States
@@ -92,7 +93,11 @@ const Home: NextPage = () => {
   }, [])
 
   if (loading) {
-    return <p>Loading...</p>
+    return (
+      <main className="flex h-screen items-center justify-center">
+        <Spin />
+      </main>
+    )
   }
 
   return (
