@@ -10,7 +10,7 @@ A Pokedex project made with `Next.js`, `TypeScript` and `Tailwindcss`.
 ## Used API
 * [PokeAPI](https://pokeapi.co/)
 
-Deployed by [Vercel](https://vercel.com/) at the following link [PokeNext](https://pokenext.vercel.app)
+Deployed by [Vercel](https://vercel.com/) at the following link [PokeNext](https://pokenext-gui-leandro.vercel.app/)
 
 ## Project Preview
 <p align=center>
