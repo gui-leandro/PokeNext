@@ -1,19 +1,19 @@
 import classNames from 'classnames'
-import type { NextPage } from 'next'
+import Link from 'next/link'
 import Head from 'next/head'
 import Image from 'next/image'
+import type { NextPage } from 'next'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { Pokemon, PokemonList, PokemonDetail } from '../types/Pokemon'
 import { pokeAPI, pokemonData, searchPokemon } from './api/api'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { Header } from '../components/Header'
 import { PokeCard } from '../components/Cards/PokeCard'
+import { Spin } from '../components/Loading/Spin'
+import { Footer } from '../components/Footer'
 
 // Icons
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md'
-import { Spin } from '../components/Loading/Spin'
-import { Footer } from '../components/Footer'
-import Link from 'next/link'
 
 const Home: NextPage = () => {
   // States
