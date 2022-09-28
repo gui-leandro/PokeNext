@@ -26,7 +26,7 @@ export const Footer: FunctionComponent = () => {
           2022 - Guilherme Leandro Rolim
         </p>
         <article className='flex items-center justify-center mt-6'>
-          <Link href={'https://github.com/gui-leandro/pokenext'} passHref>
+          <Link href={'https://github.com/guirdy/pokenext'} passHref>
             <a
               className='
                 flex 
